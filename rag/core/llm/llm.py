@@ -27,13 +27,16 @@ misa_llm = ChatOpenAI(
     }
 )
 
-messages = [
-    (
-        "system",
-        "You are a helpful assistant.",
-    ),
-    ("human", "what is the capital of Vietnam? Answer in Vietnamese."),
-]
+# messages = [
+#     (
+#         "system",
+#         "You are a helpful assistant.",
+#     ),
+#     (
+#         "human", 
+#         "what is the capital of Vietnam? Answer in Vietnamese."
+#     ),
+# ]
 
-ai_msg = misa_llm.invoke(messages)
-print(ai_msg.content)
+# ai_msg = misa_llm.invoke(messages)
+# print(ai_msg.content)
