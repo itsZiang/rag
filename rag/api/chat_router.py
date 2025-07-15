@@ -1,8 +1,11 @@
-from fastapi import FastAPI
+from fastapi import APIRouter
 from fastapi.responses import RedirectResponse
+from rag.main import rag_answer
 
-app = FastAPI()
+chat_router = APIRouter()
 
-@app.get("/")
-async def root():
-    return RedirectResponse(url="/docs")
+
+@chat_router.post("/chat")
+async def chat_router_(message: str):
+    response = rag_answer(message)
+    return {"response": response}

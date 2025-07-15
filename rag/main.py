@@ -62,6 +62,6 @@ def rag_answer(query):
 
 if __name__ == "__main__":
     # Example usage of the rag_answer function
-    question = "Kỹ thuật chơi đàn tranh truyền thống của Việt Nam có những đặc điểm gì nổi bật?"
+    question = "Các phong cách chơi đàn tranh tại Trung Quốc có sự phân chia như thế nào?"
     answer = rag_answer(question)
     print(f"Question: {question}\nAnswer: {answer}")

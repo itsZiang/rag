@@ -22,7 +22,7 @@ misa_llm = ChatOpenAI(
     extra_body={
         "service": "test-aiservice.misa.com.vn",
         "chat_template_kwargs": {            
-            "enable_thinking": True
+            "enable_thinking": False
         }
     }
 )
