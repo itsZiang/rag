@@ -3,6 +3,11 @@ from rag.core.vectordb.milvus import vector_store
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
+import logging
+from setup import setup_logging
+
+setup_logging()
+logger = logging.getLogger(__name__)
 
 
 def rag_answer(query):
@@ -57,7 +62,7 @@ def rag_answer(query):
 
     # Invoke the RAG chain with a specific question and retrieve the response
     res = rag_chain.invoke(query)
-    
+    logger.info(f"RAG answer for query '{query}': {res}")
     return res
 
 if __name__ == "__main__":

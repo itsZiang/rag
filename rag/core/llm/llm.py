@@ -11,7 +11,8 @@ APP_CODE = os.getenv("APP_CODE")
 
 # Initialize the OpenAI language model for response generation
 misa_llm = ChatOpenAI(
-    model="misa-qwen3-30b",
+    # model="misa-qwen3-30b",
+    model="misa-qwen3-235b",
     base_url=BASE_URL,
     api_key=API_KEY,
     default_headers={
