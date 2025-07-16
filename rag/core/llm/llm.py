@@ -28,15 +28,6 @@ misa_llm = ChatOpenAI(
     }
 )
 
-def generate_streamed_response(message):
-    """
-    Function to generate a streamed response from the language model.
-    
-    Args:
-        query (str): The input query for which the response is generated.
-        
-    Yields:
-        str: The streamed response text.
-    """
-    for chunk in misa_llm.stream(message):
-        yield chunk.text()
+llm = ChatOpenAI(
+    model="gpt-4o-mini",
+)

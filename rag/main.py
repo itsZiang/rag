@@ -1,4 +1,4 @@
-from rag.core.llm.llm import misa_llm
+from rag.core.llm.llm import misa_llm, llm
 from rag.core.vectordb.milvus import vector_store
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnablePassthrough
@@ -23,7 +23,7 @@ def rag_answer(query):
     
     # Retrieve relevant documents from the vector store based on the query
 
-    llm = misa_llm
+    # llm = misa_llm
 
     # Define the prompt template for generating AI responses
     PROMPT_TEMPLATE = """
