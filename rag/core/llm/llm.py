@@ -28,16 +28,15 @@ misa_llm = ChatOpenAI(
     }
 )
 
-# messages = [
-#     (
-#         "system",
-#         "You are a helpful assistant.",
-#     ),
-#     (
-#         "human", 
-#         "what is the capital of Vietnam? Answer in Vietnamese."
-#     ),
-# ]
-
-# ai_msg = misa_llm.invoke(messages)
-# print(ai_msg.content)
+def generate_streamed_response(message):
+    """
+    Function to generate a streamed response from the language model.
+    
+    Args:
+        query (str): The input query for which the response is generated.
+        
+    Yields:
+        str: The streamed response text.
+    """
+    for chunk in misa_llm.stream(message):
+        yield chunk.text()
