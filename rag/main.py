@@ -13,7 +13,7 @@ from datetime import datetime
 setup_logging()
 logger = logging.getLogger(__name__)
 
-llm = misa_llm
+llm = llm
 
 # Define the prompt template for generating AI responses
 PROMPT_TEMPLATE = """
@@ -222,7 +222,7 @@ def rag_answer(query, conversation_id):
         rag_chain = (
             {"context": retriever | format_docs, "question": RunnablePassthrough(), "chat_history": lambda x: formatted_history}
             | prompt
-            | misa_llm
+            | llm
             | StrOutputParser()
         )
         # Invoke the RAG chain with a specific question and retrieve the response
@@ -255,7 +255,7 @@ def rag_answer_stream(query, conversation_id):
         rag_chain = (
             {"context": retriever | format_docs, "question": RunnablePassthrough(), "chat_history": lambda x: formatted_history}
             | prompt
-            | misa_llm
+            | llm
             | StrOutputParser()
         )
         

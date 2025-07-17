@@ -1,9 +1,9 @@
-from langchain_milvus import Milvus
+from langchain_milvus import Milvus, BM25BuiltInFunction
 from rag.core.embedding.embedding import embedding
 from rag.core.vectordb.load_data import docs
 
 URI = "./milvus_example.db"
-COLLECTION_NAME = "test_collection"
+COLLECTION_NAME = "tgdd"
 
 from pymilvus import connections, utility
 

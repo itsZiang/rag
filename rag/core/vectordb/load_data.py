@@ -1,16 +1,10 @@
-from langchain_community.document_loaders import DirectoryLoader
-from langchain_community.document_loaders import WikipediaLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_core.documents import Document
+import pandas as pd
 
-documents = WikipediaLoader(
-    query="Đàn tranh", 
-    load_max_docs=1,
-    lang="vi",
-    doc_content_chars_max=10000000
-).load()
+df = pd.read_csv("products_details.csv")
 
-# Initialize a RecursiveCharacterTextSplitter for splitting text into chunks
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=512, chunk_overlap=20)
+docs = []
 
-# Split the documents into chunks using the text_splitter
-docs = text_splitter.split_documents(documents)
+for index, row in df.iterrows():
+    docs.append(Document(page_content=f"Tên điện thoại: {row['title']}.\n Thông số: {row['specifications']}", metadata={"title": row["title"], "url": row["url"]}))
+
