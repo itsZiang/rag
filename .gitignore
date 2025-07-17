@@ -7,4 +7,4 @@ data/
 
 milvus_demo.db
 
-milvus_demo.db.lock
+.milvus_demo.db.lock

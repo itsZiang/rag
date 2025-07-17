@@ -31,3 +31,7 @@ misa_llm = ChatOpenAI(
 llm = ChatOpenAI(
     model="gpt-4o-mini",
 )
+
+
+def chat_complete(message):
+    return misa_llm.invoke(message).content
