@@ -3,7 +3,7 @@ from rag.core.embedding.embedding import embedding
 from rag.core.vectordb.load_data import docs
 
 URI = "./milvus_example.db"
-COLLECTION_NAME = "tgdd_1"
+COLLECTION_NAME = "tgdd_2"
 
 from pymilvus import connections, utility
 
