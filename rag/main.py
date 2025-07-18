@@ -13,38 +13,72 @@ from datetime import datetime
 setup_logging()
 logger = logging.getLogger(__name__)
 
-llm = llm
+llm = misa_llm
 
 # Define the prompt template for generating AI responses
 PROMPT_TEMPLATE = """
-Human: You are an AI assistant, and provides answers to questions.
-Use the following pieces of information to provide a concise answer to the question enclosed in <question> tags.
-If you don't know the answer, just say that you don't know, don't try to make up an answer.
+Human: Bạn là một chuyên viên tư vấn sản phẩm công nghệ thông minh và nhiệt tình. Nhiệm vụ của bạn là:
 
-<chat_history>
+1. **Tư vấn sản phẩm**: Phân tích nhu cầu và gợi ý sản phẩm phù hợp
+2. **So sánh sản phẩm**: Đưa ra bảng so sánh chi tiết khi có nhiều lựa chọn
+3. **Giải thích rõ ràng**: Giải thích các thông số kỹ thuật một cách dễ hiểu
+4. **Tư vấn ngân sách**: Đề xuất sản phẩm phù hợp với mức giá khách hàng
+5. **Cập nhật thông tin**: Cung cấp thông tin về giá cả, khuyến mãi, tình trạng hàng
+
+**NGUYÊN TẮC TƯ VẤN:**
+- Luôn hỏi rõ nhu cầu sử dụng của khách hàng trước khi tư vấn
+- Giải thích lý do tại sao sản phẩm phù hợp với khách hàng
+- Đưa ra ít nhất 2-3 lựa chọn với các mức giá khác nhau
+- Nêu rõ ưu nhược điểm của từng sản phẩm
+- Sử dụng ngôn ngữ thân thiện, dễ hiểu, tránh thuật ngữ kỹ thuật phức tạp
+- Khi không có thông tin, hãy thành thật nói "Tôi cần kiểm tra thêm thông tin" thay vì bịa đặt
+
+**CÁCH THỨC TƯ VẤN:**
+- Nếu khách hàng hỏi chung chung: Hỏi lại nhu cầu cụ thể (chụp ảnh, chơi game, công việc, ngân sách...)
+- Nếu khách hàng hỏi về sản phẩm cụ thể: Giải thích chi tiết và so sánh với sản phẩm tương tự
+- Nếu khách hàng phân vân: Tạo bảng so sánh rõ ràng với các tiêu chí quan trọng
+
+<lịch_sử_chat>
 {chat_history}
-</chat_history>
+</lịch_sử_chat>
 
-<context>
+<thông_tin_sản_phẩm>
 {context}
-</context>
+</thông_tin_sản_phẩm>
 
-<question>
+<câu_hỏi_khách_hàng>
 {question}
-</question>
+</câu_hỏi_khách_hàng>
 
-A:"""
+**Hãy trả lời như một chuyên viên tư vấn chuyên nghiệp, nhiệt tình và am hiểu sản phẩm:**"""
 
 # Create a PromptTemplate instance with the defined template and input variables
 prompt = PromptTemplate(
     template=PROMPT_TEMPLATE, input_variables=["context", "question", "chat_history"]
 )
 # Convert the vector store to a retriever
-retriever = vector_store.as_retriever()
+retriever = vector_store.as_retriever(search_kwargs={"k": 8})
 
-# Define a function to format the retrieved documents
+# Define a function to format the retrieved documents with metadata
 def format_docs(docs):
-    return "\n\n".join(doc.page_content for doc in docs)
+    formatted_docs = []
+    for i, doc in enumerate(docs, 1):
+        content = doc.page_content
+        metadata = doc.metadata if hasattr(doc, 'metadata') else {}
+        
+        # Format metadata if available
+        metadata_str = ""
+        if metadata:
+            metadata_parts = []
+            for key, value in metadata.items():
+                if value:  # Only include non-empty values
+                    metadata_parts.append(f"{key}: {value}")
+            if metadata_parts:
+                metadata_str = f" [Metadata: {', '.join(metadata_parts)}]"
+        
+        formatted_docs.append(f"Document {i}:{metadata_str}\n{content}")
+    
+    return "\n\n".join(formatted_docs)
 
 def load_all_conversations():
     """Load tất cả conversations"""
@@ -255,7 +289,7 @@ def rag_answer_stream(query, conversation_id):
         rag_chain = (
             {"context": retriever | format_docs, "question": RunnablePassthrough(), "chat_history": lambda x: formatted_history}
             | prompt
-            | llm
+            | misa_llm
             | StrOutputParser()
         )
         
@@ -310,6 +344,17 @@ Title:"""
         logger.error(f"Error generating title: {e}")
         # Fallback to simple truncation
         return first_message[:50] + "..." if len(first_message) > 50 else first_message
+
+def get_docs_with_metadata(query, k=5):
+    """Lấy documents với metadata riêng biệt"""
+    docs = retriever.get_relevant_documents(query, k=k)
+    return [
+        {
+            "content": doc.page_content,
+            "metadata": doc.metadata if hasattr(doc, 'metadata') else {}
+        }
+        for doc in docs
+    ]
 
 # Khởi tạo conversations file khi import module
 if not os.path.exists("chat_history.json"):

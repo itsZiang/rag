@@ -3,7 +3,7 @@ from rag.core.embedding.embedding import embedding
 from rag.core.vectordb.load_data import docs
 
 URI = "./milvus_example.db"
-COLLECTION_NAME = "tgdd"
+COLLECTION_NAME = "tgdd_1"
 
 from pymilvus import connections, utility
 
@@ -17,7 +17,7 @@ if not utility.has_collection(COLLECTION_NAME):
             "uri": "./milvus_demo.db",
         },
         collection_name=COLLECTION_NAME,
-        drop_old=False,
+        drop_old=True,
     )
 else:
     # Only connect, do not re-insert documents
