@@ -1,4 +1,5 @@
 from langchain_openai import ChatOpenAI
+from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
 from dotenv import load_dotenv
 import os
@@ -28,10 +29,15 @@ misa_llm = ChatOpenAI(
     }
 )
 
-llm = ChatOpenAI(
+openai_model = ChatOpenAI(
     model="gpt-4o-mini",
 )
 
+groq_model = ChatGroq(api_key=os.getenv("GROQ_API_KEY"),
+                    model="moonshotai/kimi-k2-instruct",
+                    temperature=0.7
+                    )
+
 
 def chat_complete(message):
-    return misa_llm.invoke(message).content
+    return groq_model.invoke(message).content

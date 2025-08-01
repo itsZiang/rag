@@ -12,3 +12,4 @@ uvicorn>=0.35.0
 streamlit>=1.46.1
 selenium>=4.34.2
 beautifulsoup4>=4.13.4
+langchain-groq>=0.3.6

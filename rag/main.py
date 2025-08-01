@@ -1,4 +1,4 @@
-from rag.core.llm.llm import misa_llm, llm, chat_complete
+from rag.core.llm.llm import misa_llm, openai_model, groq_model, chat_complete
 from rag.core.vectordb.milvus import vector_store
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnablePassthrough
@@ -13,7 +13,7 @@ from datetime import datetime
 setup_logging()
 logger = logging.getLogger(__name__)
 
-llm = misa_llm
+llm = groq_model
 
 # Define the prompt template for generating AI responses
 PROMPT_TEMPLATE = """
@@ -289,7 +289,7 @@ def rag_answer_stream(query, conversation_id):
         rag_chain = (
             {"context": retriever | format_docs, "question": RunnablePassthrough(), "chat_history": lambda x: formatted_history}
             | prompt
-            | misa_llm
+            | llm
             | StrOutputParser()
         )
         
